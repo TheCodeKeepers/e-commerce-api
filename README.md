@@ -1,4 +1,4 @@
-# E-commerce Simple Node.JS API
+# E-commerce Minimal Node.JS API
 ===================
 
 Node.JS Minimal E-commerce Rest API Designed in Node.js Using Express and Mongo, feel free to use it as a start in your projects.
