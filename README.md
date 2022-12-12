@@ -5,3 +5,5 @@ Node.JS Minimal E-commerce Rest API Designed in Node.js Using Express and Mongo,
 
 | [Documentation](https://www.facecode.com)  |  [React Front-End](https://play.google.com/) | [Video Demo](https://www.youtube.com/channel/UCOXi18i2MtkucVo_y2VwVGA/videos)|
 |----------|--------|------|
+
+![Schema](https://zupimages.net/up/22/50/kdja.png)
