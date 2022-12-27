@@ -16,23 +16,18 @@ const FILE_TYPE_MAP = {
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const isValid = FILE_TYPE_MAP[file.mimetype];
-        let uploError = new Error('Invalid image type !');
+        let uplodError = new Error('Invalid image type !');
 
         if (isValid) {
-            uploError = null;
+            uplodError = null;
         }
 
         cb(null, 'public/uploads')
     },
     filename: function (req, file, cb) {
-        //const fileName = file.originalname.split(' ').join('-');
-        //const extension = FILE_TYPE_MAP[file.mimetype];
-        //cb(null, `${fileName}-${Date.now()}.${extension}`);
-        //-->result:"http://localhost:3000/public/upload/flower.png-1672150684225.png"
-
-        let extArray = file.mimetype.split(" ").join('-');
-        let extension = extArray[extArray.length - 1];
-        cb(null, `${file.fieldname}-${Date.now()}.${extension}`);
+        const fileName = file.fieldname.split(' ').join('-');
+        const extension = FILE_TYPE_MAP[file.mimetype];
+        cb(null, `${fileName}-${Date.now()}.${extension}`);
     }
 })
 
@@ -178,6 +173,35 @@ router.get(`/get/featured/:count`, async (req, res) => {
         res.status(500).json({ success: false })
     }
     res.send(products);
+})
+
+
+//Product Gallery Multipe Images Upload
+router.put('/gallery-images/:id', uploadOptions.array('images', 10), async (req, res) => {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+        return res.status(400).send('Invalid Product Id');
+    }
+    const files = req.files;
+    let imagesPaths = [];
+    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
+
+    if (files) {
+        files.map((file) => {
+            imagesPaths.push(`${basePath}${file.filename}`);
+        });
+    }
+
+    const product = await Product.findByIdAndUpdate(
+        req.params.id,
+        {
+            images: imagesPaths
+        },
+        { new: true }
+    );
+
+    if (!product) return res.status(500).send('the gallery cannot be updated!');
+
+    res.send(product);
 })
 
 
